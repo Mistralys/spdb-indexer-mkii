@@ -115,4 +115,37 @@
   <data name="Message_Database_Connection_Failed" xml:space="preserve">
     <value>Could not connect to the database.</value>
   </data>
+  <data name="Dialog_Title_Folders" xml:space="preserve">
+    <value>Manage folders</value>
+  </data>
+  <data name="Dialog_Folders_Message_Added_Folder" xml:space="preserve">
+    <value>The new folder has been added.</value>
+  </data>
+  <data name="Dialog_TextPrompt_Title" xml:space="preserve">
+    <value>Text input</value>
+  </data>
+  <data name="Dialog_TextPrompt_Message" xml:space="preserve">
+    <value>Please enter a text.</value>
+  </data>
+  <data name="Dialog_Folders_Message_EnterLabel" xml:space="preserve">
+    <value>Please enter a label to recognize the folder by.</value>
+  </data>
+  <data name="Dialog_Folders_Status_CancelledAdding" xml:space="preserve">
+    <value>Adding the folder was cancelled.</value>
+  </data>
+  <data name="Dialog_Folders_Title_AddFolder" xml:space="preserve">
+    <value>Add a new folder</value>
+  </data>
+  <data name="Dialog_Folders_Browse_Description" xml:space="preserve">
+    <value>Please choose a folder to add to the library.</value>
+  </data>
+  <data name="Button_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Button_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Dialog_Folders_Status_FoldersDeleted" xml:space="preserve">
+    <value>The selected folders have been removed from the list.</value>
+  </data>
 </root>

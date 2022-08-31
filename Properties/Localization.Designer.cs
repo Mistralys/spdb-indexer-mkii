@@ -61,6 +61,105 @@ namespace SPDB_MKII.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Button_Cancel {
+            get {
+                return ResourceManager.GetString("Button_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        internal static string Button_OK {
+            get {
+                return ResourceManager.GetString("Button_OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please choose a folder to add to the library..
+        /// </summary>
+        internal static string Dialog_Folders_Browse_Description {
+            get {
+                return ResourceManager.GetString("Dialog_Folders_Browse_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The new folder has been added..
+        /// </summary>
+        internal static string Dialog_Folders_Message_Added_Folder {
+            get {
+                return ResourceManager.GetString("Dialog_Folders_Message_Added_Folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a label to recognize the folder by..
+        /// </summary>
+        internal static string Dialog_Folders_Message_EnterLabel {
+            get {
+                return ResourceManager.GetString("Dialog_Folders_Message_EnterLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adding the folder was cancelled..
+        /// </summary>
+        internal static string Dialog_Folders_Status_CancelledAdding {
+            get {
+                return ResourceManager.GetString("Dialog_Folders_Status_CancelledAdding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The selected folders have been removed from the list..
+        /// </summary>
+        internal static string Dialog_Folders_Status_FoldersDeleted {
+            get {
+                return ResourceManager.GetString("Dialog_Folders_Status_FoldersDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a new folder.
+        /// </summary>
+        internal static string Dialog_Folders_Title_AddFolder {
+            get {
+                return ResourceManager.GetString("Dialog_Folders_Title_AddFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a text..
+        /// </summary>
+        internal static string Dialog_TextPrompt_Message {
+            get {
+                return ResourceManager.GetString("Dialog_TextPrompt_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text input.
+        /// </summary>
+        internal static string Dialog_TextPrompt_Title {
+            get {
+                return ResourceManager.GetString("Dialog_TextPrompt_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage folders.
+        /// </summary>
+        internal static string Dialog_Title_Folders {
+            get {
+                return ResourceManager.GetString("Dialog_Title_Folders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SPDB MKII.
         /// </summary>
         internal static string Dialog_Title_Main {

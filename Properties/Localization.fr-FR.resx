@@ -135,4 +135,37 @@
   <data name="Message_Database_Connection_Failed" xml:space="preserve">
     <value>La connexion à la base de données a échoué.</value>
   </data>
+  <data name="Dialog_Title_Folders" xml:space="preserve">
+    <value>Gérer les dossiers</value>
+  </data>
+  <data name="Dialog_Folders_Message_Added_Folder" xml:space="preserve">
+    <value>Le nouveau dossier a été ajouté.</value>
+  </data>
+  <data name="Dialog_TextPrompt_Title" xml:space="preserve">
+    <value>Entrée de texte</value>
+  </data>
+  <data name="Dialog_TextPrompt_Message" xml:space="preserve">
+    <value>Entrez un texte ci-dessous.</value>
+  </data>
+  <data name="Dialog_Folders_Message_EnterLabel" xml:space="preserve">
+    <value>Entrez un nom pour reconnaître le dossier.</value>
+  </data>
+  <data name="Dialog_Folders_Status_CancelledAdding" xml:space="preserve">
+    <value>L'ajout de dossier a été annulé.</value>
+  </data>
+  <data name="Dialog_Folders_Title_AddFolder" xml:space="preserve">
+    <value>Ajouter un nouveau dossier</value>
+  </data>
+  <data name="Dialog_Folders_Browse_Description" xml:space="preserve">
+    <value>Sélectionnez un dossier à ajouter à la bibliothèque.</value>
+  </data>
+  <data name="Button_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Button_Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Dialog_Folders_Status_FoldersDeleted" xml:space="preserve">
+    <value>Les dossiers sélectionnés ont été supprimés de la liste.</value>
+  </data>
 </root>
