@@ -36,7 +36,7 @@ namespace SPDB_MKII.Classes.DatabaseInfos
 
                     if (!string.IsNullOrWhiteSpace(Program.AppSettings.Databases))
                     {
-                        LoadData(Program.AppSettings.Databases, databases);
+                        LoadData(new DelimitedJSONParser(Program.AppSettings.Databases, RecordsSeparator), databases);
                     }
                     else
                     {
@@ -48,15 +48,13 @@ namespace SPDB_MKII.Classes.DatabaseInfos
             } 
         }
 
-        private static void LoadData(string storedDefinitions, List<DatabaseDefinition> collection)
+        private static void LoadData(DelimitedJSONParser parsed, List<DatabaseDefinition> collection)
         {
-            string[] list = storedDefinitions.Split(RecordsSeparator);
+            Program.Log.Debug("Databases | Found [{0}] stored configurations, adding them.", parsed.Count);
 
-            Program.Log.Debug("Databases | Found [{0}] stored configurations, adding them.", list.Length);
-
-            foreach (string item in list)
+            foreach (string definitionJSON in parsed.Items)
             {
-                DatabaseDefinition? def = JsonConvert.DeserializeObject<DatabaseDefinition>(item.Trim());
+                DatabaseDefinition? def = JsonConvert.DeserializeObject<DatabaseDefinition>(definitionJSON);
 
                 if (def != null) 
                 {
