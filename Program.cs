@@ -1,9 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Serilog;
-using SPDB_MKII.Classes;
-using SPDB_MKII.Classes.DatabaseInfos;
 using SPDB_MKII.Forms;
 using System.Diagnostics;
 
@@ -11,22 +6,7 @@ namespace SPDB_MKII
 {
     internal static class Program
     {
-        static IServiceProvider? serviceProvider = null;
-
-        public static IServiceProvider ServiceProvider
-        {
-            get
-            {
-                if (serviceProvider != null)
-                {
-                    return serviceProvider;
-                }
-
-                serviceProvider = ConfigureServices();
-
-                return serviceProvider;
-            }
-        }
+        public static bool DebugEnabled { get => AppSettings.DebugEnabled; }
 
         public static Properties.Settings AppSettings
         {
@@ -74,27 +54,6 @@ namespace SPDB_MKII
             // ------------------------------------------------------
 
             Application.Run(new DBSelection());
-        }
-
-        private static ServiceProvider ConfigureServices()
-        {
-            var services = new ServiceCollection();
-
-            // Replace with your server version and type.
-            // Use 'MariaDbServerVersion' for MariaDB.
-            // Alternatively, use 'ServerVersion.AutoDetect(connectionString)'.
-            // For common usages, see pull request #1233.
-            var serverVersion = ServerVersion.AutoDetect(DatabaseCollection.ActiveDatabase.ConnectionString);
-
-            services.AddDbContext<DatabaseContext>(
-                dbContextOptions => dbContextOptions
-                    .UseMySql(DatabaseCollection.ActiveDatabase.ConnectionString, serverVersion)
-                    .LogTo(Console.WriteLine, LogLevel.Information)
-                    .EnableSensitiveDataLogging()
-                    .EnableDetailedErrors()
-            );
-
-            return services.BuildServiceProvider();
         }
     }
 }

@@ -3,6 +3,7 @@ using SPDB_MKII.Classes.FormHandling.Elements;
 using SPDB_MKII.Classes.FormHandling;
 using SPDB_MKII.Properties;
 using SPDB_MKII.Classes;
+using SPDB_MKII.Classes.DatabaseHandling;
 
 namespace SPDB_MKII.Forms
 {
@@ -227,23 +228,24 @@ namespace SPDB_MKII.Forms
 
             try
             {
-                var service = Program.ServiceProvider.GetService(typeof(DatabaseContext));
+                // If the DB Helper can instantiate its instance,
+                // it means the connection is successful. We use 
+                // this occasion to run any DB updates that we may
+                // need.
+                DBHelper.Instance.ExecuteUpdates();
 
-                if (service is DatabaseContext databaseContext)
+                Program.Log.Information("DB Editor | Connection successful.");
+
+                MoviesOverview screen = new()
                 {
-                    Program.Log.Information("DB Editor | Connection successful.");
+                    Location = Location,
+                    StartPosition = FormStartPosition.Manual
+                };
 
-                    MoviesOverview screen = new()
-                    {
-                        Location = Location,
-                        StartPosition = FormStartPosition.Manual
-                    };
+                screen.FormClosing += delegate { Close(); };
+                screen.Show();
 
-                    screen.FormClosing += delegate { Close(); };
-                    screen.Show();
-
-                    Hide();
-                }
+                Hide();
             }
             catch (Exception ex)
             {
