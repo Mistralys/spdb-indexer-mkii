@@ -32,6 +32,8 @@
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.MenuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuLibrary = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuFolders = new System.Windows.Forms.ToolStripMenuItem();
             this.StatusBar = new System.Windows.Forms.StatusStrip();
             this.LabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.SplitPanels = new System.Windows.Forms.SplitContainer();
@@ -39,8 +41,6 @@
             this.ColName = new System.Windows.Forms.ColumnHeader();
             this.ColActors = new System.Windows.Forms.ColumnHeader();
             this.ColStudio = new System.Windows.Forms.ColumnHeader();
-            this.MenuLibrary = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuFolders = new System.Windows.Forms.ToolStripMenuItem();
             this.TableMain.SuspendLayout();
             this.MainMenu.SuspendLayout();
             this.StatusBar.SuspendLayout();
@@ -89,9 +89,24 @@
             // MenuExit
             // 
             this.MenuExit.Name = "MenuExit";
-            this.MenuExit.Size = new System.Drawing.Size(224, 26);
+            this.MenuExit.Size = new System.Drawing.Size(126, 26);
             this.MenuExit.Text = "{Exit}";
             this.MenuExit.Click += new System.EventHandler(this.MenuExit_Click);
+            // 
+            // MenuLibrary
+            // 
+            this.MenuLibrary.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuFolders});
+            this.MenuLibrary.Name = "MenuLibrary";
+            this.MenuLibrary.Size = new System.Drawing.Size(78, 24);
+            this.MenuLibrary.Text = "{Library}";
+            // 
+            // MenuFolders
+            // 
+            this.MenuFolders.Name = "MenuFolders";
+            this.MenuFolders.Size = new System.Drawing.Size(224, 26);
+            this.MenuFolders.Text = "{Manage folders}";
+            this.MenuFolders.Click += new System.EventHandler(this.MenuFolders_Click);
             // 
             // StatusBar
             // 
@@ -154,20 +169,6 @@
             // ColStudio
             // 
             this.ColStudio.Text = "{Studio}";
-            // 
-            // MenuLibrary
-            // 
-            this.MenuLibrary.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuFolders});
-            this.MenuLibrary.Name = "MenuLibrary";
-            this.MenuLibrary.Size = new System.Drawing.Size(78, 24);
-            this.MenuLibrary.Text = "{Library}";
-            // 
-            // MenuFolders
-            // 
-            this.MenuFolders.Name = "MenuFolders";
-            this.MenuFolders.Size = new System.Drawing.Size(224, 26);
-            this.MenuFolders.Text = "{Manage folders}";
             // 
             // MoviesOverview
             // 

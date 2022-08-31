@@ -23,5 +23,11 @@ namespace SPDB_MKII.Forms
         {
             Close();
         }
+
+        private void MenuFolders_Click(object sender, EventArgs e)
+        {
+            Folders dialog = new();
+            dialog.Show();
+        }
     }
 }
