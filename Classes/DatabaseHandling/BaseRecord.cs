@@ -2,12 +2,13 @@
 
 namespace SPDB_MKII.Classes.DatabaseHandling
 {
-    internal abstract class BaseRecord
+    internal abstract class BaseRecord : IDisposable
     {
         protected long id;
         protected DBHelper db;
         protected Dictionary<string, string> data;
         protected List<string> modifiedColumns = new();
+        private bool disposedValue;
 
         public long ID { get => id; }
 
@@ -77,6 +78,22 @@ namespace SPDB_MKII.Classes.DatabaseHandling
             }
         }
 
+        public void SetColumn(string column, long value)
+        {
+            SetColumn(column, value.ToString());
+        }
+
+        public void SetColumn(string column, bool value)
+        {
+            string store = "no";
+
+            if (value) {
+                store = "yes";
+            }
+
+            SetColumn(column, store);
+        }
+
         public bool IsModified
         {
             get => modifiedColumns.Count > 0;
@@ -121,5 +138,45 @@ namespace SPDB_MKII.Classes.DatabaseHandling
 
         public event EventHandler? ColumnModified;
         public event EventHandler<RecordSavedEventArgs>? Saved;
+
+        /// <summary>
+        /// Clear all large collections, and set nullable fields to null
+        /// </summary>
+        abstract protected void DisposeCollections();
+
+        /// <summary>
+        /// Dispose of all references owned by the class that implement
+        /// the disposable interface.
+        /// </summary>
+        abstract protected void DisposeDisposables();
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    DisposeDisposables();
+                }
+
+                DisposeCollections();
+
+                data.Clear();
+                modifiedColumns.Clear();
+                disposedValue = true;
+            }
+        }
+
+        ~BaseRecord()
+        {
+             Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }
