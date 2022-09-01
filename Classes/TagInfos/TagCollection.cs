@@ -5,13 +5,13 @@ namespace SPDB_MKII.Classes.TagInfos
 {
     internal static class TagCollection
     {
-        public static Dictionary<long,TagCategoryDefinition>? categories = null;
+        public static Dictionary<long,TagCategoryRecord>? categories = null;
 
-        public static List<TagCategoryDefinition> Categories
+        public static List<TagCategoryRecord> Categories
         {
             get
             { 
-                List<TagCategoryDefinition> list = new();
+                List<TagCategoryRecord> list = new();
 
                 foreach(long categoryID in CategoryIDs)
                 {
@@ -22,16 +22,16 @@ namespace SPDB_MKII.Classes.TagInfos
             }
         }
 
-        public static TagCategoryDefinition GetCategoryByID(long categoryID)
+        public static TagCategoryRecord GetCategoryByID(long categoryID)
         {
-            categories ??= new Dictionary<long, TagCategoryDefinition>();
+            categories ??= new Dictionary<long, TagCategoryRecord>();
 
             if(categories.ContainsKey(categoryID))
             {
                 return categories[categoryID];
             }
 
-            TagCategoryDefinition category = new(categoryID);
+            TagCategoryRecord category = new(categoryID);
             category.Saved += Handle_CategorySaved;
 
             categories.Add(categoryID, category);
@@ -41,13 +41,13 @@ namespace SPDB_MKII.Classes.TagInfos
 
         private static void Handle_CategorySaved(object? sender, DatabaseHandling.RecordEvents.RecordSavedEventArgs e)
         {
-            if (e.Record is TagCategoryDefinition def)
+            if (e.Record is TagCategoryRecord def)
             {
-                CategoryModified?.Invoke(null, new CategoryModifiedEventArgs(def));
+                CategorySaved?.Invoke(null, new CategorySavedEventArgs(def));
             }
         }
 
-        public static TagCategoryDefinition AddCategory(string name)
+        public static TagCategoryRecord AddCategory(string name)
         {
             long id = DBHelper.Instance.Insert(
                 @"INSERT INTO
@@ -60,14 +60,16 @@ namespace SPDB_MKII.Classes.TagInfos
                 }
             );
 
-            TagCategoryDefinition category = GetCategoryByID(id);
+            TagCategoryRecord category = GetCategoryByID(id);
 
             CategoryAdded?.Invoke(null, new CategoryAddedEventArgs(category));
 
             return category;
         }
 
-        public static void DeleteCategory(TagCategoryDefinition category)
+        private static TagCategoryRecord? deletingCategory = null;
+
+        public static void DeleteCategory(TagCategoryRecord category)
         {
             DBHelper.RequireTransaction();
 
@@ -76,7 +78,40 @@ namespace SPDB_MKII.Classes.TagInfos
                 return;
             }
 
+            // Store the category being deleted so this information
+            // can be passed on in the DeleteTag event.
+            deletingCategory = category;
+
+            // First off, delete all tags in the category,
+            // so anyone watching those tag events can react
+            // to the change. For example, the collection uses
+            // this to remove the tag from the tags collection.
+            //
+            // We use a copy of the tags list to avoid issues
+            // when modifying the tags collection.
+            List<TagRecord> tags = new(category.Tags);
+
+            foreach(TagRecord tag in tags)
+            {
+                DeleteTag(tag);
+            }
+
+            DBHelper.Instance.Delete(
+                string.Format(
+                    @"DELETE FROM
+                        `{0}`
+                    WHERE
+                        `{1}`=@id",
+                    TagCategoryRecord.TableName,
+                    TagCategoryRecord.ColPrimary
+                ),
+                new Dictionary<string, string> {
+                    { "id", category.ID.ToString() }
+                }
+            );
+
             categories.Remove(category.ID);
+            deletingCategory = null;
 
             CategoryDeleted?.Invoke(null, new CategoryDeletedEventArgs(category.ID, category.Name));
         }
@@ -104,32 +139,65 @@ namespace SPDB_MKII.Classes.TagInfos
 
         private static List<long>? tagIDs = null;
 
-        public static Dictionary<long,TagDefinition>? tags = null;
+        public static Dictionary<long,TagRecord>? tags = null;
 
-        public static List<TagDefinition> Tags
+        public static List<TagRecord> Tags
         {
             get
             {
-                List<TagDefinition> list = new List<TagDefinition>();
+                List<TagRecord> list = new();
 
                 foreach (long tagID in TagIDs)
                 {
-                    list.Add(new TagDefinition(tagID));
+                    list.Add(new TagRecord(tagID));
                 }
 
                 return list;
             }
         }
 
-        public static TagDefinition GetTagByID(long tagID)
+        public static TagRecord GetTagByID(long tagID)
         {
-            tags ??= new Dictionary<long,TagDefinition>();
+            tags ??= new Dictionary<long,TagRecord>();
 
-            TagDefinition tag = new(tagID);
+            TagRecord tag = new(tagID);
+            tag.CategorySwitched += Handle_Tag_CategoryChanged;
 
             tags[tagID] = tag;
 
             return tag;
+        }
+
+        private static void Handle_Tag_CategoryChanged(object? sender, TagCategorySwitchedEventArgs e)
+        {
+            TagCategorySwitched?.Invoke(null, e);
+        }
+
+        public static void DeleteTag(TagRecord tag)
+        {
+            DBHelper.RequireTransaction();
+
+            DBHelper.Instance.Delete(
+                string.Format(
+                    @"DELETE FROM
+                        `{0}`
+                    WHERE
+                        `{1}`=@id",
+                    TagRecord.TableName,
+                    TagRecord.ColPrimary
+                ),
+                new Dictionary<string, string> 
+                {
+                    { "id", tag.ID.ToString() }
+                }
+            );
+
+            if (tagIDs != null)
+            {
+                tagIDs.Remove(tag.ID);
+            }
+
+            TagDeleted?.Invoke(null, new TagDeletedEventArgs(tag.ID, tag.Name, deletingCategory));
         }
 
         public static List<long> TagIDs
@@ -154,11 +222,17 @@ namespace SPDB_MKII.Classes.TagInfos
         public static event EventHandler<CategoryAddedEventArgs>? CategoryAdded;
         public static event EventHandler<CategoryDeletedEventArgs>? CategoryDeleted;
 
+        /// <summary>
+        /// Triggered whenever a category's columns have been modified, 
+        /// and the changes have been committed to the database.
+        /// </summary>
+        public static event EventHandler<CategorySavedEventArgs>? CategorySaved;
 
         /// <summary>
-        /// Triggered whenever a category has been modified, and the changes
-        /// have been committed to the database.
+        /// Triggered when a tag has been switched to another category.
         /// </summary>
-        public static event EventHandler<CategoryModifiedEventArgs>? CategoryModified;
+        public static event EventHandler<TagCategorySwitchedEventArgs>? TagCategorySwitched;
+
+        public static event EventHandler<TagDeletedEventArgs>? TagDeleted;
     }
 }

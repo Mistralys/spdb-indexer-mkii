@@ -2,11 +2,11 @@
 {
     internal class CategoryAddedEventArgs : EventArgs
     {
-        private TagCategoryDefinition category;
+        private TagCategoryRecord category;
 
-        public TagCategoryDefinition Category { get => category; }
+        public TagCategoryRecord Category { get => category; }
 
-        public CategoryAddedEventArgs(TagCategoryDefinition category)
+        public CategoryAddedEventArgs(TagCategoryRecord category)
         {
             this.category = category;
         }
