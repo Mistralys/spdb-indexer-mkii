@@ -61,6 +61,15 @@ namespace SPDB_MKII.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add now.
+        /// </summary>
+        internal static string Button_AddNow {
+            get {
+                return ResourceManager.GetString("Button_AddNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string Button_Cancel {
@@ -75,6 +84,33 @@ namespace SPDB_MKII.Properties {
         internal static string Button_OK {
             get {
                 return ResourceManager.GetString("Button_OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This allows you to configure the tag category..
+        /// </summary>
+        internal static string Dialog_CategoryEditor_Abstract {
+            get {
+                return ResourceManager.GetString("Dialog_CategoryEditor_Abstract", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a new category.
+        /// </summary>
+        internal static string Dialog_CategoryEditor_Title_Add {
+            get {
+                return ResourceManager.GetString("Dialog_CategoryEditor_Title_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit category {0}.
+        /// </summary>
+        internal static string Dialog_CategoryEditor_Title_EditX {
+            get {
+                return ResourceManager.GetString("Dialog_CategoryEditor_Title_EditX", resourceCulture);
             }
         }
         

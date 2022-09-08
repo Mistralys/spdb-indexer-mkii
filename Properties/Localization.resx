@@ -148,4 +148,16 @@
   <data name="Dialog_Folders_Status_FoldersDeleted" xml:space="preserve">
     <value>The selected folders have been removed from the list.</value>
   </data>
+  <data name="Dialog_CategoryEditor_Title_Add" xml:space="preserve">
+    <value>Add a new category</value>
+  </data>
+  <data name="Dialog_CategoryEditor_Title_EditX" xml:space="preserve">
+    <value>Edit category {0}</value>
+  </data>
+  <data name="Dialog_CategoryEditor_Abstract" xml:space="preserve">
+    <value>This allows you to configure the tag category.</value>
+  </data>
+  <data name="Button_AddNow" xml:space="preserve">
+    <value>Add now</value>
+  </data>
 </root>

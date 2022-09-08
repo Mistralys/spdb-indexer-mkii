@@ -168,4 +168,16 @@
   <data name="Dialog_Folders_Status_FoldersDeleted" xml:space="preserve">
     <value>Les dossiers sélectionnés ont été supprimés de la liste.</value>
   </data>
+  <data name="Dialog_CategoryEditor_Title_Add" xml:space="preserve">
+    <value>Ajouter une nouvelle catégorie</value>
+  </data>
+  <data name="Dialog_CategoryEditor_Title_EditX" xml:space="preserve">
+    <value>Modifier la catégorie {0}</value>
+  </data>
+  <data name="Dialog_CategoryEditor_Abstract" xml:space="preserve">
+    <value>Ceci vous permet de configurer la catégorie de balises.</value>
+  </data>
+  <data name="Button_AddNow" xml:space="preserve">
+    <value>Ajouter maintenant</value>
+  </data>
 </root>

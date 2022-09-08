@@ -168,4 +168,16 @@
   <data name="Dialog_Folders_Status_FoldersDeleted" xml:space="preserve">
     <value>Die gewählten Verzeichnisse wurden aus der Liste entfernt.</value>
   </data>
+  <data name="Dialog_CategoryEditor_Title_Add" xml:space="preserve">
+    <value>Eine neue Kategorie hinzufügen</value>
+  </data>
+  <data name="Dialog_CategoryEditor_Title_EditX" xml:space="preserve">
+    <value>Kategorie {0} bearbeiten</value>
+  </data>
+  <data name="Dialog_CategoryEditor_Abstract" xml:space="preserve">
+    <value>Hier können Sie die Tag-Kategorie konfigurieren.</value>
+  </data>
+  <data name="Button_AddNow" xml:space="preserve">
+    <value>Jetzt hinzufügen</value>
+  </data>
 </root>
