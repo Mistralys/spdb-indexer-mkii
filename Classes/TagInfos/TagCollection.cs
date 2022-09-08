@@ -49,6 +49,8 @@ namespace SPDB_MKII.Classes.TagInfos
 
         public static TagCategoryRecord AddCategory(string name)
         {
+            DBHelper.RequireTransaction();
+
             long id = DBHelper.Instance.Insert(
                 @"INSERT INTO
                     `tag_categories`
