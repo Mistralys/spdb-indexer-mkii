@@ -103,7 +103,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
             }
         }
 
-        public void UpdateDynamic(string tableName, string primaryName, Dictionary<string, string> data)
+        public void UpdateDynamic(string tableName, string primaryName, Dictionary<string, string?> data)
         {
             var setFields = new List<string>();
 
@@ -112,7 +112,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                 throw new Exception(string.Format("Primary value for {0} not present in update data set", primaryName));
             }
 
-            foreach (KeyValuePair<string, string> kvp in data)
+            foreach (KeyValuePair<string, string?> kvp in data)
             {
                 setFields.Add(string.Format("{0}=@{0}", kvp.Key));
             }
@@ -132,7 +132,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
             Update(query, data);
         }
 
-        public long Insert(string queryString, Dictionary<string, string>? variables = null)
+        public long Insert(string queryString, Dictionary<string, string?>? variables = null)
         {
             using (MySqlCommand cmd = new MySqlCommand(queryString, connection))
             {
@@ -170,7 +170,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
             get => Program.DebugEnabled && Settings.Default.DebugQueries;
         }
 
-        protected static void RegisterQuery(string source, string queryString, Dictionary<string, string>? variables = null)
+        protected static void RegisterQuery(string source, string queryString, Dictionary<string, string?>? variables = null)
         {
             if (!DebugQueriesEnabled)
             {
@@ -179,7 +179,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
 
             if (variables != null)
             {
-                foreach (KeyValuePair<string, string> kvp in variables)
+                foreach (KeyValuePair<string, string?> kvp in variables)
                 {
                     var name = kvp.Key;
                     if (name.Substring(0, 1) != "@")
@@ -188,10 +188,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                     }
 
                     var value = kvp.Value;
-                    if (value == null)
-                    {
-                        value = "NULL";
-                    }
+                    value ??= "NULL";
 
                     queryString = queryString.Replace(name, value);
                 }
@@ -212,16 +209,21 @@ namespace SPDB_MKII.Classes.DatabaseHandling
             {
                 var result = new List<string>();
                 var tables = FetchAll("SHOW TABLES");
-                foreach (var kvp in tables)
+                foreach (Dictionary<string, string?> kvp in tables)
                 {
-                    result.Add(kvp[kvp.Keys.First()]);
+                    string? name = kvp[kvp.Keys.First()];
+
+                    if (name != null)
+                    {
+                        result.Add(name);
+                    }
                 }
 
                 return result;
             }
         }
 
-        public void Update(string queryString, Dictionary<string, string>? variables = null)
+        public void Update(string queryString, Dictionary<string, string?>? variables = null)
         {
             using (MySqlCommand cmd = new(queryString, connection))
             {
@@ -233,7 +235,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
             }
         }
 
-        public void Delete(string queryString, Dictionary<string, string>? variables = null)
+        public void Delete(string queryString, Dictionary<string, string?>? variables = null)
         {
             using (MySqlCommand cmd = new(queryString, connection))
             {
@@ -245,9 +247,9 @@ namespace SPDB_MKII.Classes.DatabaseHandling
             }
         }
 
-        public Dictionary<string, string> Fetch(string queryString, Dictionary<string, string>? variables = null)
+        public Dictionary<string, string?> Fetch(string queryString, Dictionary<string, string?>? variables = null)
         {
-            var result = new Dictionary<string, string>();
+            var result = new Dictionary<string, string?>();
 
             using (MySqlCommand cmd = new(queryString, connection))
             {
@@ -266,7 +268,8 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                     for (var i = 0; i < Reader.FieldCount; i++)
                     {
                         var column = Reader.GetName(i);
-                        var value = "";
+                        string? value = null;
+
                         if (!Reader.IsDBNull(i))
                         {
                             value = Reader.GetString(i);
@@ -287,7 +290,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
         /// <param name="queryString">The raw query string</param>
         /// <param name="variables">Any variables to bind, as column name > value pairs.</param>
         /// <returns></returns>
-        public string FetchKey(string columnName, string queryString, Dictionary<string, string>? variables = null)
+        public string? FetchKey(string columnName, string queryString, Dictionary<string, string?>? variables = null)
         {
             using (MySqlCommand cmd = new(queryString, connection))
             {
@@ -311,19 +314,26 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                                     return Reader.GetString(i);
                                 }
 
-                                return "";
+                                return null;
                             }
                         }
                     }
                 }
             }
 
-            return "";
+            return null;
         }
 
-        public long FetchKeyInt(string columnName, string queryString, Dictionary<string, string>? variables = null)
+        public long FetchKeyInt(string columnName, string queryString, Dictionary<string, string?>? variables = null)
         {
-            return Int64.Parse(FetchKey(columnName, queryString, variables));
+            string? result = FetchKey(columnName, queryString, variables);
+
+            if (result != null)
+            {
+                return Int64.Parse(result);
+            }
+
+            return 0;
         }
 
         /// <summary>
@@ -332,9 +342,9 @@ namespace SPDB_MKII.Classes.DatabaseHandling
         /// <param name="queryString">The raw query string</param>
         /// <param name="variables">Any variables to bind, as column name > value pairs.</param>
         /// <returns></returns>
-        public List<Dictionary<string, string>> FetchAll(string queryString, Dictionary<string, string>? variables = null)
+        public List<Dictionary<string, string?>> FetchAll(string queryString, Dictionary<string, string?>? variables = null)
         {
-            var result = new List<Dictionary<string, string>>();
+            var result = new List<Dictionary<string, string?>>();
 
             using (MySqlCommand cmd = new MySqlCommand(queryString, connection))
             {
@@ -346,11 +356,12 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                 {
                     while (Reader.Read())
                     {
-                        var entry = new Dictionary<string, string>();
+                        var entry = new Dictionary<string, string?>();
                         for (var i = 0; i < Reader.FieldCount; i++)
                         {
                             var column = Reader.GetName(i);
-                            var value = "";
+                            string? value = null;
+                            
                             if (!Reader.IsDBNull(i))
                             {
                                 value = Reader.GetString(i);
@@ -367,9 +378,9 @@ namespace SPDB_MKII.Classes.DatabaseHandling
             return result;
         }
 
-        public List<string> FetchAllKey(string columnName, string queryString, Dictionary<string, string>? variables = null)
+        public List<string?> FetchAllKey(string columnName, string queryString, Dictionary<string, string?>? variables = null)
         {
-            var result = new List<string>();
+            var result = new List<string?>();
 
             using (MySqlCommand cmd = new(queryString, connection))
             {
@@ -386,7 +397,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                             var column = Reader.GetName(i);
                             if (column == columnName)
                             {
-                                var value = "";
+                                string? value = null;
                                 if (!Reader.IsDBNull(i))
                                 {
                                     value = Reader.GetString(i);
@@ -402,27 +413,34 @@ namespace SPDB_MKII.Classes.DatabaseHandling
             return result;
         }
 
-        public List<long> FetchAllKeyInt(string columnName, string queryString, Dictionary<string, string>? variables = null)
+        public List<long> FetchAllKeyInt(string columnName, string queryString, Dictionary<string, string?>? variables = null)
         {
-            List<string> values = FetchAllKey(columnName, queryString, variables);
+            List<string?> values = FetchAllKey(columnName, queryString, variables);
             List<long> result = new();
 
-            foreach(string value in values)
+            foreach(string? value in values)
             {
-                result.Add(Int64.Parse(value));
+                if (value == null)
+                {
+                    result.Add(0);
+                }
+                else
+                {
+                    result.Add(Int64.Parse(value));
+                }
             }
 
             return result;
         }
 
-        protected static void Prepare(MySqlCommand cmd, Dictionary<string, string>? variables = null)
+        protected static void Prepare(MySqlCommand cmd, Dictionary<string, string?>? variables = null)
         {
             if (variables == null)
             {
                 return;
             }
 
-            foreach (KeyValuePair<string, string> kvp in variables)
+            foreach (KeyValuePair<string, string?> kvp in variables)
             {
                 var name = kvp.Key;
                 if (name.Substring(0, 1) != "@")

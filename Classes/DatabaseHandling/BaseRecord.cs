@@ -6,7 +6,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
     {
         protected long id;
         protected DBHelper db;
-        protected Dictionary<string, string> data;
+        protected Dictionary<string, string?> data;
         protected List<string> modifiedColumns = new();
         private bool disposedValue;
 
@@ -29,7 +29,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                     GetTableName(),
                     GetPrimaryName()
                 ),
-                new Dictionary<string, string>
+                new Dictionary<string, string?>
                 {
                     { "id", ID.ToString() }
                 }
@@ -39,29 +39,34 @@ namespace SPDB_MKII.Classes.DatabaseHandling
         protected abstract string GetTableName();
         protected abstract string GetPrimaryName();
 
-        public string GetColumn(string column)
+        public string? GetColumn(string column)
         {
             if(data.ContainsKey(column))
             {
                 return data[column];
             }
 
-            return "";
+            return null;
+        }
+
+        public string GetColumnString(string column)
+        {
+            return GetColumn(column) ?? "";
         }
 
         public long GetColumnInt(string column)
         {
-            return Int64.Parse(GetColumn(column));  
+            return Int64.Parse(GetColumn(column) ?? "0");  
         }
 
         public bool GetColumnBool(string column)
         {
-            string value = GetColumn(column);
+            string value = GetColumnString(column);
 
             return value == "yes" || value == "true";
         }
 
-        public void SetColumn(string column, string value)
+        public void SetColumn(string column, string? value)
         {
             if (!data.ContainsKey(column))
             {
@@ -70,7 +75,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
 
             if (data[column] != value)
             {
-                string oldValue = data[column];
+                string? oldValue = data[column];
                 data[column] = value;
                 modifiedColumns.Add(column);
 
@@ -116,7 +121,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
 
             DBHelper.RequireTransaction();
 
-            Dictionary<string, string> values = new();
+            Dictionary<string, string?> values = new();
 
             values[GetPrimaryName()] = ID.ToString();
 
