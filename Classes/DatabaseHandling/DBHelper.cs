@@ -1,6 +1,8 @@
 ﻿using MySqlConnector;
 using SPDB_MKII.Classes.DatabaseInfos;
 using SPDB_MKII.Properties;
+using System;
+using System.Data.Common;
 
 namespace SPDB_MKII.Classes.DatabaseHandling
 {
@@ -260,6 +262,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                 using (MySqlDataReader Reader = cmd.ExecuteReader())
                 {
                     Reader.Read();
+
                     if (!Reader.HasRows)
                     {
                         return result;
@@ -267,20 +270,33 @@ namespace SPDB_MKII.Classes.DatabaseHandling
 
                     for (var i = 0; i < Reader.FieldCount; i++)
                     {
-                        var column = Reader.GetName(i);
-                        string? value = null;
-
-                        if (!Reader.IsDBNull(i))
-                        {
-                            value = Reader.GetString(i);
-                        }
-
-                        result.Add(column, value);
+                        result.Add(Reader.GetName(i), ConvertValue(Reader, i));
                     }
                 }
             }
 
             return result;
+        }
+
+        private string? ConvertValue(MySqlDataReader Reader, int index)
+        {
+            string column = Reader.GetName(index);
+            Type type = Reader.GetFieldType(column);
+            string? value = null;
+
+            if (Reader.IsDBNull(index))
+            {
+            }
+            else if (type == typeof(uint) || type == typeof(int))
+            {
+                value = Reader.GetInt64(index).ToString();
+            }
+            else
+            {
+                value = Reader.GetString(index);
+            }
+
+            return value;
         }
 
         /// <summary>
@@ -301,20 +317,14 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                 using (MySqlDataReader Reader = cmd.ExecuteReader())
                 {
                     Reader.Read();
+
                     if (Reader.HasRows)
                     {
                         for (var i = 0; i < Reader.FieldCount; i++)
                         {
-                            var column = Reader.GetName(i);
-
-                            if (column == columnName)
+                            if (Reader.GetName(i) == columnName)
                             {
-                                if (!Reader.IsDBNull(i))
-                                {
-                                    return Reader.GetString(i);
-                                }
-
-                                return null;
+                                return ConvertValue(Reader, i);
                             }
                         }
                     }
@@ -346,7 +356,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
         {
             var result = new List<Dictionary<string, string?>>();
 
-            using (MySqlCommand cmd = new MySqlCommand(queryString, connection))
+            using (MySqlCommand cmd = new(queryString, connection))
             {
                 Prepare(cmd, variables);
 
@@ -359,15 +369,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                         var entry = new Dictionary<string, string?>();
                         for (var i = 0; i < Reader.FieldCount; i++)
                         {
-                            var column = Reader.GetName(i);
-                            string? value = null;
-                            
-                            if (!Reader.IsDBNull(i))
-                            {
-                                value = Reader.GetString(i);
-                            }
-
-                            entry.Add(column, value);
+                            entry.Add(Reader.GetName(i), ConvertValue(Reader, i));
                         }
 
                         result.Add(entry);
@@ -395,15 +397,10 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                         for (var i = 0; i < Reader.FieldCount; i++)
                         {
                             var column = Reader.GetName(i);
+
                             if (column == columnName)
                             {
-                                string? value = null;
-                                if (!Reader.IsDBNull(i))
-                                {
-                                    value = Reader.GetString(i);
-                                }
-
-                                result.Add(value);
+                                result.Add(ConvertValue(Reader, i));
                             }
                         }
                     }
