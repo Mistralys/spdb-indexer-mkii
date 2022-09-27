@@ -41,6 +41,7 @@
             this.ColName = new System.Windows.Forms.ColumnHeader();
             this.ColActors = new System.Windows.Forms.ColumnHeader();
             this.ColStudio = new System.Windows.Forms.ColumnHeader();
+            this.MenuManageTags = new System.Windows.Forms.ToolStripMenuItem();
             this.TableMain.SuspendLayout();
             this.MainMenu.SuspendLayout();
             this.StatusBar.SuspendLayout();
@@ -91,12 +92,13 @@
             this.MenuExit.Name = "MenuExit";
             this.MenuExit.Size = new System.Drawing.Size(126, 26);
             this.MenuExit.Text = "{Exit}";
-            this.MenuExit.Click += new System.EventHandler(this.MenuExit_Click);
+            this.MenuExit.Click += new System.EventHandler(this.Handle_MenuExit_Click);
             // 
             // MenuLibrary
             // 
             this.MenuLibrary.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuFolders});
+            this.MenuFolders,
+            this.MenuManageTags});
             this.MenuLibrary.Name = "MenuLibrary";
             this.MenuLibrary.Size = new System.Drawing.Size(78, 24);
             this.MenuLibrary.Text = "{Library}";
@@ -106,7 +108,7 @@
             this.MenuFolders.Name = "MenuFolders";
             this.MenuFolders.Size = new System.Drawing.Size(224, 26);
             this.MenuFolders.Text = "{Manage folders}";
-            this.MenuFolders.Click += new System.EventHandler(this.MenuFolders_Click);
+            this.MenuFolders.Click += new System.EventHandler(this.Handle_MenuFolders_Click);
             // 
             // StatusBar
             // 
@@ -170,6 +172,13 @@
             // 
             this.ColStudio.Text = "{Studio}";
             // 
+            // MenuManageTags
+            // 
+            this.MenuManageTags.Name = "MenuManageTags";
+            this.MenuManageTags.Size = new System.Drawing.Size(224, 26);
+            this.MenuManageTags.Text = "{Manage tags}";
+            this.MenuManageTags.Click += new System.EventHandler(this.Handle_MenuManageTags_Click);
+            // 
             // MoviesOverview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -207,5 +216,6 @@
         private ColumnHeader ColStudio;
         private ToolStripMenuItem MenuLibrary;
         private ToolStripMenuItem MenuFolders;
+        private ToolStripMenuItem MenuManageTags;
     }
 }
