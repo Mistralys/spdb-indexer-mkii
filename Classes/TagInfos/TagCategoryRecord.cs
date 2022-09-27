@@ -11,10 +11,20 @@ namespace SPDB_MKII.Classes.TagInfos
 
         public TagCategoryRecord(long id) : base(id)
         {
-            TagCollection.TagCategorySwitched += Handle_TagCollection_TagCategoryChanged;
+            TagCollection.TagCategorySwitched += Handle_TagCategoryChanged;
+            TagCollection.TagDeleted += Handle_TagDeleted;
         }
 
-        private void Handle_TagCollection_TagCategoryChanged(object? sender, TagEvents.TagCategorySwitchedEventArgs e)
+        private void Handle_TagDeleted(object? sender, TagDeletedEventArgs e)
+        {
+            // Reset the tags collection to rebuild it if necessary.
+            if (e.Category == this)
+            {
+                tags = null;
+            }
+        }
+
+        private void Handle_TagCategoryChanged(object? sender, TagEvents.TagCategorySwitchedEventArgs e)
         {
             if(e.OldCategory == this)
             {
@@ -29,19 +39,26 @@ namespace SPDB_MKII.Classes.TagInfos
 
         public string Name
         {
-            get => GetColumn(ColName);
+            get => GetColumn(ColName) ?? "";
             set => SetColumn(ColName, value);
         }
+
+        private List<TagRecord>? tags = null;
 
         public List<TagRecord> Tags
         {
             get
             {
-                List<TagRecord> tags = new();
+                if(tags != null)
+                {
+                    return tags;
+                }
+
+                tags = new();
 
                 foreach(TagRecord tag in TagCollection.Tags)
                 {
-                    if(tag.Category == this)
+                    if(tag.Category == this && tag.ParentTagID == 0) 
                     {
                         tags.Add(tag);
                     }
