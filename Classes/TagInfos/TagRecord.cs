@@ -13,12 +13,21 @@ namespace SPDB_MKII.Classes.TagInfos
 
         public TagRecord(long id) : base(id)
         {
+            TagCollection.TagDeleted += Handle_TagDeleted;
+        }
 
+        private void Handle_TagDeleted(object? sender, TagDeletedEventArgs e)
+        {
+            // Force rebuilding the child tags if this is one of mine.
+            if(e.ParentTagID == ID) 
+            {
+                childTags = null;
+            }
         }
 
         public string Name
         {
-            get => GetColumn(ColName);
+            get => GetColumn(ColName) ?? "";
             set => SetColumn(ColName, value);
         }
 
@@ -81,21 +90,27 @@ namespace SPDB_MKII.Classes.TagInfos
             get => ParentTagID > 0;
         }
 
+        private List<TagRecord>? childTags = null;
+
         public List<TagRecord> ChildTags
         {
             get
             {
-                List<TagRecord> list = new();
+                if (childTags != null) {
+                    return childTags;
+                }
+
+                childTags = new();
 
                 foreach(TagRecord record in TagCollection.Tags)
                 {
-                    if(record.ParentTag == this)
+                    if(record.ParentTagID == ID)
                     {
-                        list.Add(record);
+                        childTags.Add(record);
                     }
                 }
 
-                return list;
+                return childTags;
             }
         }
 
