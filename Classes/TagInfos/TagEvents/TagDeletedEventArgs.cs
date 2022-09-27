@@ -4,13 +4,24 @@
     {
         private readonly long id;
         private readonly string name;
+        private readonly long parentTagID;
+        private readonly TagCategoryRecord category;
         private readonly TagCategoryRecord? deletingCategory;
 
-        public TagDeletedEventArgs(long id, string name, TagCategoryRecord? deletingCategory=null)
+        public TagDeletedEventArgs(long id, string name, TagCategoryRecord category, long parentTagID, TagCategoryRecord? deletingCategory=null)
         {
             this.id = id;
             this.name = name;
+            this.category = category;
+            this.parentTagID = parentTagID;
             this.deletingCategory = deletingCategory;
+        }
+
+        public long ParentTagID { get { return parentTagID; } }
+
+        public TagCategoryRecord Category
+        {
+            get { return category; }
         }
 
         public long ID { get { return id; } }
