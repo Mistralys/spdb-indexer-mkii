@@ -57,7 +57,7 @@ namespace SPDB_MKII.Classes.TagInfos
                 SET
                     `name`=@name
                 ",
-                new Dictionary<string, string> {
+                new Dictionary<string, string?> {
                     { "name", name }
                 }
             );
@@ -107,7 +107,7 @@ namespace SPDB_MKII.Classes.TagInfos
                     TagCategoryRecord.TableName,
                     TagCategoryRecord.ColPrimary
                 ),
-                new Dictionary<string, string> {
+                new Dictionary<string, string?> {
                     { "id", category.ID.ToString() }
                 }
             );
@@ -141,33 +141,42 @@ namespace SPDB_MKII.Classes.TagInfos
 
         private static List<long>? tagIDs = null;
 
-        public static Dictionary<long,TagRecord>? tags = null;
+        private static readonly Dictionary<long,TagRecord> tags = new();
+
+        private static List<TagRecord>? tagsList = null;
 
         public static List<TagRecord> Tags
         {
             get
             {
-                List<TagRecord> list = new();
+                if (tagsList != null) {
+                    return tagsList;
+                }
+
+                tagsList = new();
 
                 foreach (long tagID in TagIDs)
                 {
-                    list.Add(new TagRecord(tagID));
+                    tagsList.Add(GetTagByID(tagID));
                 }
 
-                return list;
+                return tagsList;
             }
         }
 
         public static TagRecord GetTagByID(long tagID)
         {
-            tags ??= new Dictionary<long,TagRecord>();
+            if(tags.ContainsKey(tagID))
+            {
+                return tags[tagID];
+            }
 
             TagRecord tag = new(tagID);
             tag.CategorySwitched += Handle_Tag_CategoryChanged;
 
             tags[tagID] = tag;
 
-            return tag;
+            return tags[tagID];
         }
 
         private static void Handle_Tag_CategoryChanged(object? sender, TagCategorySwitchedEventArgs e)
@@ -188,7 +197,7 @@ namespace SPDB_MKII.Classes.TagInfos
                     TagRecord.TableName,
                     TagRecord.ColPrimary
                 ),
-                new Dictionary<string, string> 
+                new Dictionary<string, string?> 
                 {
                     { "id", tag.ID.ToString() }
                 }
@@ -199,7 +208,12 @@ namespace SPDB_MKII.Classes.TagInfos
                 tagIDs.Remove(tag.ID);
             }
 
-            TagDeleted?.Invoke(null, new TagDeletedEventArgs(tag.ID, tag.Name, deletingCategory));
+            if(tags.ContainsKey(tag.ID))
+            {
+                tags.Remove(tag.ID);
+            }
+
+            TagDeleted?.Invoke(null, new TagDeletedEventArgs(tag.ID, tag.Name, tag.Category, tag.ParentTagID, deletingCategory));
         }
 
         public static List<long> TagIDs
