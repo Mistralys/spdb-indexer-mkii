@@ -232,6 +232,15 @@ namespace SPDB_MKII.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Added the category {0}..
+        /// </summary>
+        internal static string Status_TagCategory_X_Added {
+            get {
+                return ResourceManager.GetString("Status_TagCategory_X_Added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add a database.
         /// </summary>
         internal static string Title_Add_Database {

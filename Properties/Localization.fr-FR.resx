@@ -180,4 +180,7 @@
   <data name="Button_AddNow" xml:space="preserve">
     <value>Ajouter maintenant</value>
   </data>
+  <data name="Status_TagCategory_X_Added" xml:space="preserve">
+    <value>La catégorie {0} a été ajoutée.</value>
+  </data>
 </root>
