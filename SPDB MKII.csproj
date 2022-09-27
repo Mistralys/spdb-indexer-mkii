@@ -47,7 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UserControls\" />
+    <Folder Include="Forms\TagsEditor\" />
   </ItemGroup>
 
 </Project>
