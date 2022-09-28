@@ -1,6 +1,11 @@
 using Serilog;
 using SPDB_MKII.Forms;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+
+// Ensure that the UnitTests project has access to any
+// internal classes in this project.
+[assembly: InternalsVisibleTo("UnitTests")]
 
 namespace SPDB_MKII
 {
