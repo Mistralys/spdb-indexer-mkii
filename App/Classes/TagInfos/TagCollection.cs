@@ -5,7 +5,7 @@ namespace SPDB_MKII.Classes.TagInfos
 {
     internal static class TagCollection
     {
-        public static Dictionary<long,TagCategoryRecord>? categories = null;
+        public static Dictionary<long,TagCategoryRecord> categories = new();
 
         public static List<TagCategoryRecord> Categories
         {
@@ -22,10 +22,18 @@ namespace SPDB_MKII.Classes.TagInfos
             }
         }
 
+        public static void ResetCollection()
+        {
+            categories.Clear();
+            categoryIDs = null;
+
+            tags.Clear();
+            tagIDs = null;
+            tagsList = null;
+        }
+
         public static TagCategoryRecord GetCategoryByID(long categoryID)
         {
-            categories ??= new Dictionary<long, TagCategoryRecord>();
-
             if(categories.ContainsKey(categoryID))
             {
                 return categories[categoryID];
