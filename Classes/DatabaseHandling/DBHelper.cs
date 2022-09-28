@@ -6,7 +6,7 @@ using System.Data.Common;
 
 namespace SPDB_MKII.Classes.DatabaseHandling
 {
-    internal class DBHelper
+    public class DBHelper
     {
         public const int DB_REVISION = 1;
         private static DBHelper? instance = null;
@@ -61,6 +61,11 @@ namespace SPDB_MKII.Classes.DatabaseHandling
             Execute("START TRANSACTION");
         }
 
+        public bool TransactionStarted
+        {
+            get { return transactionStarted; }
+        }
+
         protected void Execute(string queryString, string source = "")
         {
             RegisterQuery(source, queryString);
@@ -78,9 +83,9 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                 return;
             }
 
-            transactionStarted = false;
-
             Execute("COMMIT");
+
+            transactionStarted = false;
         }
 
         public void RollbackTransaction()
@@ -90,9 +95,9 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                 return;
             }
 
-            transactionStarted = false;
-
             Execute("ROLLBACK");
+
+            transactionStarted = false;
         }
 
         public static DBHelper Instance
@@ -494,8 +499,12 @@ namespace SPDB_MKII.Classes.DatabaseHandling
             );
         }
 
-        internal static void RequireTransaction()
+        internal void RequireTransaction()
         {
+            if (transactionStarted) { 
+                return;
+            }
+
             throw new DBTransactionException(
                 "This operation requires a transaction."    
             );
