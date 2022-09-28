@@ -49,11 +49,11 @@ namespace SPDB_MKII.Classes.TagInfos
 
         public static TagCategoryRecord AddCategory(string name)
         {
-            DBHelper.RequireTransaction();
+            DBHelper.Instance.RequireTransaction();
 
             long id = DBHelper.Instance.Insert(
                 @"INSERT INTO
-                    `tag_categories`
+                    `tags_categories`
                 SET
                     `name`=@name
                 ",
@@ -73,7 +73,7 @@ namespace SPDB_MKII.Classes.TagInfos
 
         public static void DeleteCategory(TagCategoryRecord category)
         {
-            DBHelper.RequireTransaction();
+            DBHelper.Instance.RequireTransaction();
 
             if (categories == null)
             {
@@ -186,7 +186,7 @@ namespace SPDB_MKII.Classes.TagInfos
 
         public static void DeleteTag(TagRecord tag)
         {
-            DBHelper.RequireTransaction();
+            DBHelper.Instance.RequireTransaction();
 
             DBHelper.Instance.Delete(
                 string.Format(

@@ -119,7 +119,7 @@ namespace SPDB_MKII.Classes.DatabaseHandling
                 return;
             }
 
-            DBHelper.RequireTransaction();
+            DBHelper.Instance.RequireTransaction();
 
             Dictionary<string, string?> values = new();
 
